@@ -1,20 +1,29 @@
-import * as UserController from "./user/userController"
-const express = require('express')
-const app = express()
-const port = 3000
+import express from "express";
+import { createUserRouter } from "./user/userRouter";
+import "reflect-metadata";
+import { initDB } from "./db/initDB";
 
-app.use(express.json())
+const initServer = (): Promise<void> =>
+  new Promise<void>((resolve) => {
+    const app = express();
+    const port = 3000;
 
-app.get('/', UserController.getUsers);
+    app.use(express.json());
 
-app.get('/users', UserController.getUser)
+    const userRouter = createUserRouter();
 
-app.post('/users', UserController.postUser)
+    app.use(userRouter);
 
-app.delete('/users', UserController.deleteUser)
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`);
+      resolve();
+    });
+  });
 
-app.put('/users', UserController.putUser)
+const start = async () => {
+  await initDB();
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-  })
+  await initServer();
+};
+
+start();
