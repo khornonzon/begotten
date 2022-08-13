@@ -1,5 +1,5 @@
 import express from "express";
-import { createUserRouter } from "./user/userRouter";
+import { userRouter } from "./user/userRouter";
 import "reflect-metadata";
 import { initDB } from "./db/initDB";
 
@@ -9,8 +9,6 @@ const initServer = (): Promise<void> =>
     const port = 3000;
 
     app.use(express.json());
-
-    const userRouter = createUserRouter();
 
     app.use(userRouter);
 
