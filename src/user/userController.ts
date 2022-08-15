@@ -1,16 +1,72 @@
 import { Request, Response, Router } from "express";
 import { AppDataSource } from "../db/data-source";
 import { User } from "../db/entity/User";
-import { Repository } from "typeorm";
+import { Repository, Timestamp } from "typeorm";
+import { timeStamp } from "console";
 
 export class UserController {
   private static userRepository: Repository<User> =
     AppDataSource.getRepository(User);
 
   public static async getUsers(req: Request, res: Response) {
-    const users: User[] = await UserController.userRepository.find();
 
-    res.json(users);
+    if (req.query.limit || req.query.skip)
+    {
+      if (req.query.limit && req.query.skip)
+      {
+        try {
+          const limit: number = parseInt(req.query.limit as string);
+          const offset: number = parseInt(req.query.skip as string);
+          const users: User[] = await UserController.userRepository.find({
+            order: {id: "ASC"},
+            skip: offset,
+            take: limit
+          });
+          res.json(users);
+        } catch (err){
+          console.log(err);
+          res.sendStatus(500);
+        }
+      } else if (!req.query.skip)
+      {
+        try {
+          const limit: number = parseInt(req.query.limit as string);
+          const users: User[] = await UserController.userRepository.find({
+            order: {id: "ASC"},
+            take:limit
+          })
+          res.json(users);
+        } catch (err){
+          console.log(err);
+          res.sendStatus(500);
+        }
+  
+      } else
+      {
+        try {
+          const offset: number = parseInt(req.query.skip as string);
+          const users: User[] = await UserController.userRepository.find({
+            order: {id: "ASC"},
+            skip: offset
+          });
+          res.json(users);
+        } catch (err){
+          console.log(err);
+          res.sendStatus(500);
+        }
+      }
+      
+    }
+    else
+    {
+      try {
+        const users: User[] = await UserController.userRepository.find();
+        res.json(users);
+      } catch (err){
+        console.log(err);
+        res.sendStatus(500);
+      }
+    }
   }
 
   public static async getUser(req: Request, res: Response) {

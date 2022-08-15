@@ -11,6 +11,10 @@ const initServer = (): Promise<void> =>
     app.use(express.json());
 
     app.use(userRouter);
+    app.set("query parser", "extended");
+    app.use(express.query({
+      arrayLimit: 0
+    }));
 
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`);
