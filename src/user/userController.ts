@@ -74,7 +74,6 @@ export class UserController {
         res.status(400).send("All input is required");
       }
       const user = await UserController.userRepository.findOne(surname);
-  
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
           { user_id: user.id },
@@ -83,16 +82,12 @@ export class UserController {
         user.token = token;
         res.status(200).json(user);
       }
-      res.status(400).send("Invalid Credentials");
+      res.status(400).send("loh");
     } catch (err) {
       console.log(err);
     }
-    // Our register logic ends here
   };
   
-  // ...
-
-  }
 
   public static async getUser(req: Request, res: Response) {
     const userId: number = Number(req.params.id);
