@@ -5,15 +5,12 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   name: string;
 
-  @Column()
+  @Column({nullable: true})
   surname: string;
 
-  @Column()
+  @Column({nullable: true})
   password: string;
-  
-  @Column()
-  token: string;
 }

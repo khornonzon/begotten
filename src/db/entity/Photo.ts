@@ -5,18 +5,18 @@ export class Photo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: true})
   name: string;
 
-  @Column()
+  @Column({nullable: true})
   description: string;
 
-  @Column()
+  @Column({nullable: true})
   filename: string;
 
-  @Column()
+  @Column({nullable: true})
   views: number;
 
-  @Column()
+  @Column({nullable: true})
   isPublished: boolean;
 }

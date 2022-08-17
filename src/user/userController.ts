@@ -41,54 +41,6 @@ export class UserController {
 
   }
 
-  public static async regUser(req: Request, res: Response){
-    try {
-      const {name, surname, password} = req.body;
-      if (!(name&&surname&&password))
-      {
-        res.status(404).send("we need more power.");
-      }
-      const existingUser = await UserController.userRepository.findOne(surname);
-      if (existingUser) {
-        return res.status(409).send("user already exist");
-      }
-      const encryptedPassword = await bcrypt.hash(password, 10);
-      const user = new User();
-      user.name = name;
-      user.surname = surname;
-      user.password = encryptedPassword;
-      const token = jwt.sign({ user_id: user.id}, tokenKey);
-      user.token = token;
-      await UserController.userRepository.save(user);
-      res.status(201).json(user);
-    } catch(err){
-      console.log(err);
-      res.sendStatus(500);
-    }
-  }
-  
-  public static async loginUser(req: Request, res: Response){
-    try {
-      const {surname, password} = req.body;
-      if (!(surname && password)) {
-        res.status(400).send("All input is required");
-      }
-      const user = await UserController.userRepository.findOne(surname);
-      if (user && (await bcrypt.compare(password, user.password))) {
-        const token = jwt.sign(
-          { user_id: user.id },
-          tokenKey
-        );
-        user.token = token;
-        res.status(200).json(user);
-      }
-      res.status(400).send("loh");
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  
-
   public static async getUser(req: Request, res: Response) {
     const userId: number = Number(req.params.id);
 
@@ -105,18 +57,6 @@ export class UserController {
     } else {
       res.sendStatus(404);
     }
-  }
-
-  public static async postUser(req: Request, res: Response) {
-    const { name, surname } = req.body as User;
-
-    const user = new User();
-    user.name = name;
-    user.surname = surname;
-
-    await UserController.userRepository.save(user);
-
-    res.send("user added");
   }
 
   public static async deleteUser(req: Request, res: Response) {
