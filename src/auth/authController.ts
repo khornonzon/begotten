@@ -1,6 +1,7 @@
 import { Request, Response, Router, NextFunction } from "express";
 import { AppDataSource } from "../db/data-source";
 import { User } from "../db/entity/User";
+import { UserToken } from "../db/entity/UserToken";
 import { CannotAttachTreeChildrenEntityError, FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { timeStamp } from "console";
 import { nextTick } from "process";
@@ -10,7 +11,9 @@ const jwt = require('jsonwebtoken');
 const tokenKey = '1a2b-3c4d-5e6f-7g8h'
 
 export class UserAuthController {
-  private static userRepository: Repository<User> = AppDataSource.getRepository(User);
+  static userRepository: Repository<User> = AppDataSource.getRepository(User);
+  static userTokenRepository: Repository<UserToken> = AppDataSource.getRepository(UserToken);
+  static AppDataSourceManager = AppDataSource.manager;
 
   public static async regUser(req: Request, res: Response){
     try {
@@ -51,14 +54,25 @@ export class UserAuthController {
         res.status(400).send("All input is required");
       }
       const user = await UserAuthController.userRepository.findOne({ where: 
-        {
-        surname: surname,}
+        {surname: surname}
     });
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
           { user_id: user.id },
           tokenKey
         );
+        if (!user.tokens){
+          user.tokens = [];
+        }
+        const user_token:UserToken = new UserToken();
+        user_token.user_id = user.id;
+        user_token.user = user;
+        user_token.token = token;
+        await UserAuthController.AppDataSourceManager.save(user_token);
+
+        user.tokens.push(user_token);
+        await UserAuthController.AppDataSourceManager.save(user);
+
         res.status(200).json(token);
 
       } else res.status(400).send("loh");

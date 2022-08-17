@@ -1,6 +1,6 @@
 import express from "express";
 import { userRouter } from "./user/userRouter";
-import { authRouter } from "./user/authRouter";
+import { authRouter } from "./auth/authRouter";
 import "reflect-metadata";
 import { initDB } from "./db/initDB";
 
