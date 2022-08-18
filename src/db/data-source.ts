@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import { Photo } from "./entity/Photo";
 import { User } from "./entity/User";
 import { UserToken } from "./entity/UserToken";
+import { Album} from "./entity/Album";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -10,9 +11,9 @@ export const AppDataSource = new DataSource({
   username: "postgres",
   password: "changeme",
   database: "test_db",
-  synchronize: true,
+  synchronize: false,
   logging: true,
-  entities: [Photo, User, UserToken],
+  entities: [Photo, User, UserToken, Album],
   subscribers: [],
-  migrations: [],
+  migrations: ["src/db/migrations"],
 });
