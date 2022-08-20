@@ -10,17 +10,17 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const tokenKey = '1a2b-3c4d-5e6f-7g8h'
 
-export var accsessUser = async function(req: Request, res: Response, next: NextFunction){
+export const accessUser = async function(req: Request, res: Response, next: NextFunction){
     const providedToken = req.headers.authorization?.split(' ')[1];
-    const user = await UserAuthController.userTokenRepository.findOne({
+    const userToken = await UserAuthController.userTokenRepository.findOne({
         where:{
             token: providedToken
         }
     });
-    if (user){
+    if (userToken){
         next();
     } else {
-        res.status(400).send("dont f*ck with me");
+        res.status(401).send("don't f*ck with me");
     }
 
   

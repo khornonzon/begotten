@@ -26,10 +26,11 @@ export class UserController {
     const {limit, offset} = req.query;
     const options:FindManyOptions<User> = { 
       order: {
-      id: "ASC",
+      user_id: "ASC",
       },
       skip: offset,
-      take: limit
+      take: limit,
+      
     }
     try{
       const users: User[] = await UserController.userRepository.find(options);
@@ -46,7 +47,7 @@ export class UserController {
 
     if (Number.isInteger(userId)) {
       const user: User | null = await UserController.userRepository.findOneBy({
-        id: userId,
+        user_id: userId,
       });
 
       if (user) {
@@ -64,7 +65,7 @@ export class UserController {
 
     if (Number.isInteger(deleteOnID)) {
       const user: User | null = await UserController.userRepository.findOneBy({
-        id: deleteOnID,
+        user_id: deleteOnID,
       });
 
       if (user) {
@@ -81,10 +82,10 @@ export class UserController {
 
   public static async putUser(req: Request, res: Response) {
     const incomingUser: User = req.body;
-    if (incomingUser.id) {
+    if (incomingUser.user_id) {
       const foundedUser: User | null =
         await UserController.userRepository.findOneBy({
-          id: incomingUser.id,
+          user_id: incomingUser.user_id,
         });
 
       if (foundedUser) {

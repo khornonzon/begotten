@@ -1,10 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, CreateDateColumn, UpdateDateColumn, JoinTable } from "typeorm";
+import { Commune } from "./Commune";
+import { DateTemplate } from "./templates/DateTemplate";
 import {UserToken} from "./UserToken"
 
+
 @Entity()
-export class User {
+export class User extends DateTemplate {
   @PrimaryGeneratedColumn()
-  id: number;
+  user_id: number;
 
   @Column({nullable: true})
   name: string;
@@ -16,6 +19,9 @@ export class User {
   password: string;
 
   @OneToMany(()=>UserToken, (user)=>user.user)
+  tokens: UserToken[];
 
-  tokens: UserToken[]
+  @ManyToMany(()=>Commune)
+  @JoinTable()
+  communes: Commune[]
 }
