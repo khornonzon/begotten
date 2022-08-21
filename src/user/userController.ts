@@ -1,45 +1,50 @@
 import { Request, Response, Router } from "express";
 import { AppDataSource } from "../db/data-source";
 import { User } from "../db/entity/User";
-import { CannotAttachTreeChildrenEntityError, FindManyOptions, FindOneOptions, Repository } from "typeorm";
+import {
+  CannotAttachTreeChildrenEntityError,
+  FindManyOptions,
+  FindOneOptions,
+  Repository,
+} from "typeorm";
 import { timeStamp } from "console";
 
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const tokenKey = '1a2b-3c4d-5e6f-7g8h'
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const tokenKey = "1a2b-3c4d-5e6f-7g8h";
 
-interface queryParams{
-  limit?: number,
-  offset?: number
+interface queryParams {
+  limit?: number;
+  offset?: number;
 }
 
-interface bodyRegUser{
-  name: string,
-  surname: string,
-  password: string
+interface bodyRegUser {
+  name: string;
+  surname: string;
+  password: string;
 }
 export class UserController {
   private static userRepository: Repository<User> =
     AppDataSource.getRepository(User);
-
-  public static async getUsers(req: Request<{},{}, {}, queryParams>, res: Response) {
-    const {limit, offset} = req.query;
-    const options:FindManyOptions<User> = { 
+  public static async getUsers(
+    req: Request<{}, {}, {}, queryParams>,
+    res: Response
+  ) {
+    const { limit, offset } = req.query;
+    const options: FindManyOptions<User> = {
       order: {
-      user_id: "ASC",
+        user_id: "ASC",
       },
       skip: offset,
       take: limit,
-      
-    }
-    try{
+    };
+    try {
       const users: User[] = await UserController.userRepository.find(options);
       res.json(users);
-    } catch(err){
+    } catch (err) {
       console.log(err);
       res.sendStatus(500);
     }
-
   }
 
   public static async getUser(req: Request, res: Response) {

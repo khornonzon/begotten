@@ -18,6 +18,7 @@ export const accessUser = async function(req: Request, res: Response, next: Next
         }
     });
     if (userToken){
+        res.locals.userID = userToken.user_id;
         next();
     } else {
         res.status(401).send("don't f*ck with me");
