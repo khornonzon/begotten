@@ -75,6 +75,11 @@ export class CommuneController {
           },
         }
       );
+      if (existingCommune) {
+        res.status(201).json(existingCommune);
+      } else {
+        return res.status(409).send("don't ever talk to me");
+      }
     } catch (err) {
       console.log(err);
       res.sendStatus(500);

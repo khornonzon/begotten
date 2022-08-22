@@ -28,9 +28,9 @@ export class Payment extends DateTemplate {
   @Column({ nullable: true })
   payment_sum: number;
 
-  @ManyToOne(() => User, (user) => user.payments)
+  @ManyToOne(() => User, (user) => user.payments, { cascade: true })
   user: User;
 
-  @ManyToOne(() => Commune, (commune) => commune.payments)
+  @ManyToOne(() => Commune, (commune) => commune.payments, { cascade: true })
   commune: Commune;
 }

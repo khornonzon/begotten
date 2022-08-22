@@ -1,25 +1,24 @@
 import { Router } from "express";
 import { CommuneController } from "./communeController";
 import { accessUser } from "../user/middleware/authUser";
-import { UserController } from "src/user/userController";
 
-export const userRouter = Router();
+export const communeRouter = Router();
 
-userRouter.get(
+communeRouter.get(
   "/commune/:commune_id",
   accessUser,
   CommuneController.getCommune
 );
-userRouter.put(
+communeRouter.put(
   "/commune/:commune_id",
   accessUser,
   CommuneController.putCommune
 );
-userRouter.post("/commune", accessUser, CommuneController.postCommune);
-userRouter.delete(
+communeRouter.post("/commune", accessUser, CommuneController.postCommune);
+communeRouter.delete(
   "/commune/:commune_id",
   accessUser,
   CommuneController.deleteCommune
 );
 
-userRouter.post("/commune/user/:id", accessUser, CommuneController.addUser);
+communeRouter.post("/commune/user/:id", accessUser, CommuneController.addUser);
